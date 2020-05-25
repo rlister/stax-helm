@@ -86,6 +86,11 @@ module Stax
         helm_run(:rollback, helm_release_name, revision)
       end
 
+      desc 'ls', 'list helm release'
+      def ls
+        helm_run(:ls, "--filter '^#{helm_release_name}$'")
+      end
+
     end
   end
 end
