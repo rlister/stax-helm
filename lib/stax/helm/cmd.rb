@@ -22,6 +22,10 @@ module Stax
         def helm_run(*args)
           cmd = [helm_bin, *args].join(' ')
           options[:dry_run] ? puts(cmd) : system(cmd)
+
+        ## description added to release
+        def helm_description
+          Git.sha
         end
 
         ## override with full path to a values.yaml file
@@ -37,6 +41,7 @@ module Stax
         ## construct args for install and upgrade commands
         def helm_update_args
           [].tap do |args|
+            args.push("--description #{helm_description}") if helm_description
             args.push("-f #{helm_values_file}") if helm_values_file
             args.push(helm_values&.map { |k,v| "--set #{k}=#{v}" })
           end.flatten
