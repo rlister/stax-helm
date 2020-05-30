@@ -1,7 +1,7 @@
 module Stax
   module Helm
     class Cmd < Base
-      class_option :dry_run, type: :boolean, default: false, desc: 'print command that would be run'
+      class_option :recon, aliases: '--just-print', type: :boolean, default: false, desc: 'print command that would be run'
 
       no_commands do
         def helm_release_name
@@ -21,7 +21,8 @@ module Stax
         ## run helm with args
         def helm_run(*args)
           cmd = [helm_bin, *args].join(' ')
-          options[:dry_run] ? puts(cmd) : system(cmd)
+          options[:recon] ? puts(cmd) : system(cmd)
+        end
 
         ## description added to release
         def helm_description
