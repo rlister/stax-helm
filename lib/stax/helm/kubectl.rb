@@ -9,7 +9,7 @@ module Stax
 
         def kubectl_run(*args)
           cmd = [kubectl_bin, *args].join(' ')
-          options[:dry_run] ? puts(cmd) : system(cmd)
+          options[:recon] ? puts(cmd) : system(cmd)
         end
 
         ## override this to match all objects in your helm release
