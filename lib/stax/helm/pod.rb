@@ -6,7 +6,7 @@ module Stax
       no_commands do
         def helm_pods
           jsonpath = '{.items[*].metadata.name}'
-          %x[kubectl get pods -o=jsonpath='#{jsonpath}' #{selector('app.kubernetes.io/instance': helm_release_name)}].split
+          %x[kubectl get pods -o=jsonpath='#{jsonpath}' -l #{helm_selector}].split
         end
 
         def helm_ask_pod(msg)
@@ -22,19 +22,19 @@ module Stax
 
       desc 'pods', 'list pods'
       def pods
-        kubectl_run(:get, :pods, selector('app.kubernetes.io/instance': helm_release_name))
+        kubectl_run(:get, :pods, '-l', helm_selector)
       end
 
       desc 'containers', 'list containers'
       def containers
         columns = 'NAME:.metadata.name,CONTAINERS:.spec.containers[*].name'
-        kubectl_run(:get, :pods, '-o', "custom-columns=#{columns}", selector('app.kubernetes.io/instance': helm_release_name))
+        kubectl_run(:get, :pods, '-o', "custom-columns=#{columns}", '-l', helm_selector)
       end
 
       desc 'logs [OPTIONS]', 'run kubectl logs with same options'
       def logs(*args)
         args = [ '--all-containers', '--prefix', '--follow' ] if args.empty? # helpful default args
-        kubectl_run(:logs, selector('app.kubernetes.io/instance': helm_release_name), *args)
+        kubectl_run(:logs, '-l', helm_selector, *args)
       end
 
       desc 'exec [CMD]', 'exec command in a web pod'

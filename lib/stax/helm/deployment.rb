@@ -5,7 +5,7 @@ module Stax
 
       desc 'deployments', 'list deployments'
       def deployments
-        kubectl_run(:get, :deployments, selector('app.kubernetes.io/instance': helm_release_name))
+        kubectl_run(:get, :deployments, '-l', helm_selector)
       end
 
     end

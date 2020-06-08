@@ -12,15 +12,15 @@ module Stax
           options[:dry_run] ? puts(cmd) : system(cmd)
         end
 
-        ## build a selector argument from a hash of label and value pairs
-        def selector(hash)
-          '-l ' + hash.compact.map { |k,v| "#{k}=#{v}" }.join(',')
+        ## override this to match all objects in your helm release
+        def helm_selector
+          "app.kubernetes.io/instance=#{helm_release_name}"
         end
       end
 
       desc 'services', 'list services'
       def services
-        kubectl_run(:get, :services, selector('app.kubernetes.io/instance': helm_release_name))
+        kubectl_run(:get, :services, '-l', helm_selector)
       end
 
     end
