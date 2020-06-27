@@ -1,3 +1,4 @@
+puts 'loading'
 module Stax
   class Base < Thor
 
