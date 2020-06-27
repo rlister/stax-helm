@@ -1,13 +1,10 @@
 module Stax
   module Helm
+
     class Cmd < Base
       class_option :recon, aliases: '--just-print', type: :boolean, default: false, desc: 'print command that would be run'
 
       no_commands do
-        def helm_release_name
-          @_helm_release_name ||= "#{app_name}-#{branch_name}"
-        end
-
         ## location of helm chart
         def helm_dir
           File.join(Stax.root_path, 'helm')

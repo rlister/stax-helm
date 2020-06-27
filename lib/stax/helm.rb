@@ -1,3 +1,4 @@
+require 'stax/base'
 require 'stax/helm/cmd'
 require 'stax/helm/kubectl'
 require 'stax/helm/ingress'
