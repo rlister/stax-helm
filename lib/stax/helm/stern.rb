@@ -16,6 +16,7 @@ module Stax
       ## pass through args to stern
       desc 'stern [STERN_ARGS]', 'use stern to show logs'
       def stern(*args)
+        trap('SIGINT', 'EXIT')    # clean exit with ctrl-c
         stern_run('-l', helm_selector, *args)
       end
 

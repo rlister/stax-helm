@@ -33,6 +33,7 @@ module Stax
 
       desc 'logs [OPTIONS]', 'run kubectl logs with same options'
       def logs(*args)
+        trap('SIGINT', 'EXIT')    # clean exit with ctrl-c
         args = [ '--all-containers', '--prefix', '--follow' ] if args.empty? # helpful default args
         kubectl_run(:logs, '-l', helm_selector, *args)
       end
