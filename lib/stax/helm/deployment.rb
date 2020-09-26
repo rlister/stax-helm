@@ -36,6 +36,21 @@ module Stax
         end
       end
 
+      desc 'scale', 'show/set scale for deployments'
+      method_option :replicas, aliases: '-r', type: :numeric, default: nil, desc: 'replicas'
+      def scale
+        if options[:replicas]
+          deployments = helm_ask_deployments('choose deployments').join(' ')
+          kubectl_run(:scale, :deployment, deployments, '--replicas', options[:replicas])
+        else
+          debug("Deployment replicas for #{helm_release_name}")
+          deployments = kubectl_json(:get, :deployments, '-l', helm_selector)
+          print_table deployments['items'].map { |i|
+            [ i['metadata']['name'], i['status']['replicas'] || 0 ]
+          }
+        end
+      end
+
     end
   end
 end
