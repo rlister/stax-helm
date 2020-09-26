@@ -12,6 +12,12 @@ module Stax
           options[:recon] ? puts(cmd) : system(cmd)
         end
 
+        def kubectl_json(*args)
+          args.push('-o=json')
+          cmd = [kubectl_bin, *args].join(' ')
+          options[:recon] ? puts(cmd) : JSON.parse(%x(#{cmd}))
+        end
+
         ## override this to match all objects in your helm release
         def helm_selector
           "app.kubernetes.io/instance=#{helm_release_name}"
