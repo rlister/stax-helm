@@ -5,4 +5,5 @@ require 'stax/helm/ingress'
 require 'stax/helm/pod'
 require 'stax/helm/deployment'
 require 'stax/helm/stern'
+require 'stax/helm/runcmd'
 Stax.add_command(:helm, Stax::Helm::Cmd)
