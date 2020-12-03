@@ -55,7 +55,11 @@ module Stax
       desc 'runcmd [CMD]', 'run dedicated interactive container'
       method_option :sleep, type: :string,  default: '1h',  description: 'kill container after time'
       method_option :keep,  type: :boolean, default: false, description: 'do not delete job'
-      def runcmd(cmd = helm_run_cmd)
+      def runcmd(*cmd)
+        ## use default if not set
+        cmd = Array(helm_run_cmd) if cmd.empty?
+
+        ## name of k8s Job to create
         job = helm_run_job
 
         ## get deployment and extract container spec
@@ -85,7 +89,7 @@ module Stax
         ## exec into the pod and run interactive command
         debug("Connecting to pod #{pod}")
         kubectl_run(:wait, '--for=condition=Ready', '--timeout=5m', :pod, pod)
-        kubectl_run(:exec, '-it', pod, '--', cmd)
+        kubectl_run(:exec, '-it', pod, '--', *cmd)
       rescue JSON::ParserError
         fail_task('cannot get kubernetes resource')
       ensure
