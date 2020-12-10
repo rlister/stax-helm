@@ -64,7 +64,7 @@ module Stax
 
         ## get deployment and extract container spec
         deployment = kubectl_json(:get, :deployment, helm_run_deployment)
-        spec = deployment['spec']['template']['spec']['containers'].find do |c|
+        spec = deployment.dig('spec', 'template', 'spec', 'containers').find do |c|
           c['name'] == helm_run_container
         end
 
