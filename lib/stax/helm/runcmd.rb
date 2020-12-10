@@ -78,6 +78,10 @@ module Stax
         ## add container to Job template
         template[:spec][:template][:spec][:containers] = [ spec ]
 
+        ## get service account and add to template
+        service_account = deployment.dig('spec', 'template', 'spec', 'serviceAccountName')
+        template[:spec][:template][:spec][:serviceAccountName] = service_account if service_account
+
         ## create new unique Job based on the container spec
         debug("Creating job #{job}")
         Open3.popen2('kubectl create -f -') { |stdin, stdout, _|
