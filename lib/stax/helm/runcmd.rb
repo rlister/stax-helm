@@ -5,8 +5,8 @@ module Stax
     class Cmd
 
       no_commands do
-        ## construct a Job template from passed container spec
-        def helm_run_template(name, container_spec)
+        ## construct a Job template
+        def helm_run_template(name)
           {
             apiVersion: 'batch/v1',
             kind: :Job,
@@ -19,12 +19,11 @@ module Stax
             spec: {
               template: {
                 spec: {
-                  restartPolicy: :Never,
-                  containers: [ container_spec ],
+                  restartPolicy: :Never
                 }
               }
             }
-          }.to_json
+          }
         end
 
         ## Deployment to clone for container
@@ -59,8 +58,9 @@ module Stax
         ## use default if not set
         cmd = Array(helm_run_cmd) if cmd.empty?
 
-        ## name of k8s Job to create
+        ## name of k8s Job to create, and basic template
         job = helm_run_job
+        template = helm_run_template(job)
 
         ## get deployment and extract container spec
         deployment = kubectl_json(:get, :deployment, helm_run_deployment)
@@ -75,10 +75,13 @@ module Stax
         spec['name'] = 'run'
         spec['args'] = ['sleep', options[:sleep]]
 
+        ## add container to Job template
+        template[:spec][:template][:spec][:containers] = [ spec ]
+
         ## create new unique Job based on the container spec
         debug("Creating job #{job}")
         Open3.popen2('kubectl create -f -') { |stdin, stdout, _|
-          stdin.print(helm_run_template(job, spec))
+          stdin.print(template.to_json)
           stdin.close
           puts stdout.gets
         }
