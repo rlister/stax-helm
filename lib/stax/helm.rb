@@ -4,6 +4,8 @@ require 'stax/helm/kubectl'
 require 'stax/helm/ingress'
 require 'stax/helm/pod'
 require 'stax/helm/deployment'
+require 'stax/helm/jobs'
+require 'stax/helm/cronjobs'
 require 'stax/helm/stern'
 require 'stax/helm/runcmd'
 Stax.add_command(:helm, Stax::Helm::Cmd)
