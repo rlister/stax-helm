@@ -71,6 +71,7 @@ module Stax
         ## cleanup the container spec so we can use it in a Job
         spec.delete('livenessProbe')
         spec.delete('readinessProbe')
+        spec.delete('startupProbe')
         spec.delete('volumeMounts')
         spec['name'] = 'run'
         spec['args'] = ['sleep', options[:sleep]]
