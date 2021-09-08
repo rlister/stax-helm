@@ -8,7 +8,7 @@ module Stax
 
       ## make string safe to use in naming helm stuff
       def helm_safe(string)
-        string.slice(0, 53).gsub(/[\W_]/, '-').downcase
+        string.slice(0, 53).gsub(/[\W_]/, '-').sub(/-+$/, '').downcase
       end
     end
 
