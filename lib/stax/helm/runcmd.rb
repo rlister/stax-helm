@@ -54,6 +54,7 @@ module Stax
       desc 'runcmd [CMD]', 'run dedicated interactive container'
       method_option :sleep, type: :string,  default: '1h',  description: 'kill container after time'
       method_option :keep,  type: :boolean, default: false, description: 'do not delete job'
+      method_option :ttl,   type: :numeric, default: 30,    description: 'secs to keep job after pod terminates'
       def runcmd(*cmd)
         ## use default if not set
         cmd = Array(helm_run_cmd) if cmd.empty?
@@ -78,6 +79,9 @@ module Stax
 
         ## add container to Job template
         template[:spec][:template][:spec][:containers] = [ spec ]
+
+        ## add ttl to Job so it will be cleaned up after Pod terminates
+        template[:spec][:ttlSecondsAfterFinished] = options[:ttl]
 
         ## get service account and add to template
         service_account = deployment.dig('spec', 'template', 'spec', 'serviceAccountName')
