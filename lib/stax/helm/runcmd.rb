@@ -1,3 +1,4 @@
+require 'open3'
 require 'securerandom'
 
 module Stax
