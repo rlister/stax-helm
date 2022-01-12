@@ -39,7 +39,9 @@ module Stax
 
         ## name for Job to create based on container
         def helm_run_job
-          "#{helm_release_name}-run-#{SecureRandom.hex(4)}"
+          suffix = "-run-#{SecureRandom.hex(4)}"
+          prefix = helm_release_name.slice(0,63-suffix.length).sub(/-+$/, '') # ensure total name is <=63 chars
+          prefix + suffix
         end
 
         ## default command to run
