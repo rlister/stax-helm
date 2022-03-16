@@ -22,6 +22,11 @@ module Stax
         def helm_selector
           "app.kubernetes.io/instance=#{helm_release_name}"
         end
+
+        ## override this to match a component in your helm release
+        def helm_component_selector(component)
+          "app.kubernetes.io/instance=#{helm_release_name},app.kubernetes.io/component=#{component}"
+        end
       end
 
       desc 'services', 'list services'
