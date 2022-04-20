@@ -10,7 +10,7 @@ module Stax
 
       desc 'dns', 'list external-dns hostnames'
       def dns
-        jsonpath = '{.items[].metadata.annotations.external-dns\.alpha\.kubernetes\.io/hostname}' + "\n"
+        jsonpath = '{range .items[*]}{.metadata.annotations.external-dns\.alpha\.kubernetes\.io/hostname}{"\n"}{end}'
         kubectl_run(:get, :ingresses, "-o=jsonpath='#{jsonpath}'", '-l', helm_selector)
       end
 
