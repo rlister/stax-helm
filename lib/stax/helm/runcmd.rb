@@ -15,6 +15,9 @@ module Stax
               name: name,
               labels: {
                 'app.kubernetes.io/managed-by' => :stax
+              },
+              annotations: {
+                'karpenter.sh/do-not-disrupt' => :true
               }
             },
             spec: {
